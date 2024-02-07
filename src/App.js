@@ -11,6 +11,7 @@ import {
   Indicator,
 } from "@mantine/core";
 import { IconCircleCheck, IconCircleDashed } from "@tabler/icons-react";
+import { ShoppingCart } from "tabler-icons-react";
 import Card from "./components/Card";
 import "./App.css";
 
@@ -64,8 +65,15 @@ function App() {
           />
         </Input.Wrapper>
         <Button onClick={() => setSearchValue("")}>Temizle</Button>
-        <Indicator color="green" label={basketItems.length} inline size={25}>
-          <Button onClick={() => setOpened(true)}>Sepet</Button>
+        <Indicator color="green" label={basketItems.length} inline size={22}>
+          <ShoppingCart
+            size={33}
+            strokeWidth={2}
+            color={"#00abfb"}
+            onClick={() => setOpened(true)}
+          >
+            Sepet
+          </ShoppingCart>
         </Indicator>
       </Group>
       <SimpleGrid cols={3} className="Store">
