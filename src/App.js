@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Container, SimpleGrid, List, ThemeIcon, Input } from "@mantine/core";
+import {
+  Container,
+  SimpleGrid,
+  List,
+  ThemeIcon,
+  Input,
+  Button,
+  Group,
+  Drawer,
+  Indicator,
+} from "@mantine/core";
 import { IconCircleCheck, IconCircleDashed } from "@tabler/icons-react";
 import Card from "./components/Card";
 import "./App.css";
@@ -38,15 +48,28 @@ const storeItems = [
 ];
 
 function App() {
+  let [opened, setOpened] = useState(false);
   let [basketItems, setBasketItems] = useState([]);
   let [searchValue, setSearchValue] = useState("");
-  let filteredItems = basketItems.filter(
+  let filteredItems = storeItems.filter(
     (item) => item.name.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0
   );
   return (
     <Container>
+      <Group align="end">
+        <Input.Wrapper label="Arama">
+          <Input
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </Input.Wrapper>
+        <Button onClick={() => setSearchValue("")}>Temizle</Button>
+        <Indicator color="green" label={basketItems.length} inline size={25}>
+          <Button onClick={() => setOpened(true)}>Sepet</Button>
+        </Indicator>
+      </Group>
       <SimpleGrid cols={3} className="Store">
-        {storeItems.map(({ name, src }) => {
+        {filteredItems.map(({ name, src }) => {
           return (
             <Card
               name={name}
@@ -56,34 +79,39 @@ function App() {
           );
         })}
       </SimpleGrid>
-      <Input.Wrapper label="Arama">
-        <Input onChange={(e) => setSearchValue(e.target.value)} />
-      </Input.Wrapper>
-      <List
-        className="List"
-        spacing="xs"
+      <Drawer
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Sepetim"
+        Padding="sm"
         size="sm"
-        center
-        icon={
-          <ThemeIcon color="teal" size={24} radius="xl">
-            <IconCircleCheck size={16} />
-          </ThemeIcon>
-        }
       >
-        {filteredItems.map(({ name }) => (
-          <List.Item>{name}</List.Item>
-        ))}
-
-        <List.Item
+        <List
+          className="List"
+          spacing="xs"
+          size="sm"
+          center
           icon={
-            <ThemeIcon color="blue" size={24} radius="xl">
-              <IconCircleDashed size={16} />
+            <ThemeIcon color="teal" size={24} radius="xl">
+              <IconCircleCheck size={16} />
             </ThemeIcon>
           }
         >
-          Submit a pull request once you are done
-        </List.Item>
-      </List>
+          {basketItems.map(({ name }) => (
+            <List.Item>{name}</List.Item>
+          ))}
+
+          <List.Item
+            icon={
+              <ThemeIcon color="blue" size={24} radius="xl">
+                <IconCircleDashed size={16} />
+              </ThemeIcon>
+            }
+          >
+            Submit a pull request once you are done
+          </List.Item>
+        </List>
+      </Drawer>
     </Container>
   );
 }

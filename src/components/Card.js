@@ -9,7 +9,7 @@ const CardComponent = ({ name, src, onAdd }) => {
 
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500}>{name}</Text>
-        <Badge color="pink">On Sale</Badge>
+        <Badge color="green">New</Badge>
       </Group>
 
       <Text size="sm" c="dimmed">
