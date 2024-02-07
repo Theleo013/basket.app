@@ -9,6 +9,7 @@ import {
   Group,
   Drawer,
   Indicator,
+  Badge,
 } from "@mantine/core";
 import { IconCircleCheck, IconCircleDashed } from "@tabler/icons-react";
 import { ShoppingCart } from "tabler-icons-react";
@@ -17,31 +18,37 @@ import "./App.css";
 
 const storeItems = [
   {
+    id: 101,
     name: "Kamera",
     src: "camera",
     price: "440",
   },
   {
+    id: 102,
     name: "Klasik Saat",
     src: "classic watch",
     price: "800",
   },
   {
+    id: 103,
     name: "Smart Saat",
     src: "smart watch",
     price: "560",
   },
   {
+    id: 104,
     name: "Headset",
     src: "headset",
     price: "560",
   },
   {
+    id: 105,
     name: "Sport Ayaqqabi",
     src: "sport shoes",
     price: "560",
   },
   {
+    id: 106,
     name: "Gitara",
     src: "guitar",
     price: "560",
@@ -55,6 +62,17 @@ function App() {
   let filteredItems = storeItems.filter(
     (item) => item.name.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0
   );
+  let addToBasket = ({ id, name }) => {
+    let basketIndex = basketItems.findIndex((item) => item.id === id);
+    if (basketIndex >= 0) {
+      let _basketItem = [...basketItems];
+      _basketItem[basketIndex].count += 1;
+      setBasketItems(_basketItem);
+    } else {
+      setBasketItems([...basketItems, { id, name, count: 1 }]);
+    }
+  };
+
   return (
     <Container>
       <Group align="end">
@@ -77,12 +95,13 @@ function App() {
         </Indicator>
       </Group>
       <SimpleGrid cols={3} className="Store">
-        {filteredItems.map(({ name, src }) => {
+        {filteredItems.map(({ id, name, src }) => {
           return (
             <Card
+              key={name}
               name={name}
               src={src}
-              onAdd={() => setBasketItems([...basketItems, { name }])}
+              onAdd={() => addToBasket({ id, name })}
             />
           );
         })}
@@ -105,10 +124,13 @@ function App() {
             </ThemeIcon>
           }
         >
-          {basketItems.map(({ name }) => (
-            <List.Item>{name}</List.Item>
+          {basketItems.map(({ name, count }) => (
+            <List.Item>
+              <Group>
+                <div>{name}</div> <Badge>{count}</Badge>
+              </Group>
+            </List.Item>
           ))}
-
           <List.Item
             icon={
               <ThemeIcon color="blue" size={24} radius="xl">
